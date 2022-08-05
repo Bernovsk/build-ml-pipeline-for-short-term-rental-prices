@@ -36,6 +36,10 @@ def go(args):
     logger.info("Convert last review column to datetime format")
     artifact_frame['last_review'] = pd.to_datetime(artifact_frame['last_review'])
 
+    logger.info("Removing Outliers from the latitude and longitude columns")
+    idx_latlon = artifact_frame['longitude'].between(-74.25, -73.50) & artifact_frame['latitude'].between(40.5, 41.2)
+    artifact_frame = artifact_frame[idx_latlon].copy()
+
     logger.info("Saving the pre-processing data")
     outfile = args.output_artifact
     artifact_frame.to_csv(outfile, index = False)
